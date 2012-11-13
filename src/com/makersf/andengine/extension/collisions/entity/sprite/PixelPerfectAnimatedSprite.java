@@ -3,7 +3,7 @@ package com.makersf.andengine.extension.collisions.entity.sprite;
 import org.andengine.entity.shape.RectangularShape;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.opengl.shader.ShaderProgram;
-import org.andengine.opengl.vbo.DrawType;
+import org.andengine.opengl.vbo.VertexBufferObject.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import com.makersf.andengine.extension.collisions.entity.shape.IPixelPerfectShape;
@@ -17,70 +17,67 @@ import com.makersf.andengine.extension.collisions.pixelperfect.masks.Rectangular
  * 
  * @author Francesco Zoffoli
  * @since 01.08.2012
- *
+ * 
  */
-public class PixelPerfectAnimatedSprite extends AnimatedSprite implements IPixelPerfectShape{
-	
-	private static boolean USE_PIXELPERFECT_COLLISION_FOR_EVERY_RECTANGULAR_SHAPE = true;
+public class PixelPerfectAnimatedSprite extends AnimatedSprite implements IPixelPerfectShape {
 
-	public PixelPerfectAnimatedSprite(float pX, float pY, PixelPerfectTiledTextureRegion pTiledTextureRegion,
-			VertexBufferObjectManager pVertexBufferObjectManager) {
-		super(pX, pY, pTiledTextureRegion,
-				pVertexBufferObjectManager);
-	}
-	
-	public PixelPerfectAnimatedSprite(float pX, float pY, float pWidth,
-			float pHeight, PixelPerfectTiledTextureRegion pTiledTextureRegion,
-			VertexBufferObjectManager pVertexBufferObjectManager) {
-		super(pX, pY, pWidth, pHeight, pTiledTextureRegion,
-				pVertexBufferObjectManager);
-	}
-	
-	public PixelPerfectAnimatedSprite(float pX, float pY, float pWidth,
-			float pHeight, PixelPerfectTiledTextureRegion pTiledTextureRegion,
-			VertexBufferObjectManager pVertexBufferObjectManager,
-			DrawType pDrawType, ShaderProgram pShaderProgram) {
-		super(pX, pY, pWidth, pHeight, pTiledTextureRegion, pVertexBufferObjectManager,
-				pDrawType, pShaderProgram);
-	}
+  private static boolean USE_PIXELPERFECT_COLLISION_FOR_EVERY_RECTANGULAR_SHAPE = true;
 
-	@Override
-	public IPixelPerfectMask getPixelPerfectMask() {
-		return ((PixelPerfectTiledTextureRegion)mTextureRegion).getPixelMask(getCurrentTileIndex());
-	}
+  public PixelPerfectAnimatedSprite(float pX, float pY, PixelPerfectTiledTextureRegion pTiledTextureRegion,
+      VertexBufferObjectManager pVertexBufferObjectManager) {
+    super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);
+  }
 
-	public IPixelPerfectMask getPixelMask(final int pTileIndex) {
-		return ((PixelPerfectTiledTextureRegion)mTextureRegion).getPixelMask(pTileIndex);
-	}
+  public PixelPerfectAnimatedSprite(float pX, float pY, float pWidth, float pHeight,
+      PixelPerfectTiledTextureRegion pTiledTextureRegion, VertexBufferObjectManager pVertexBufferObjectManager) {
+    super(pX, pY, pWidth, pHeight, pTiledTextureRegion, pVertexBufferObjectManager);
+  }
 
-	public boolean collidesWith(final RectangularShape pOtherShape) {
-		if(super.collidesWith(pOtherShape))
-		{
-			if(pOtherShape instanceof IPixelPerfectShape)
-				return PixelPerfectCollisionChecker.checkCollision(this, this.getPixelPerfectMask(), pOtherShape, ((IPixelPerfectShape)pOtherShape).getPixelPerfectMask());
-			else
-			{
-				if(!USE_PIXELPERFECT_COLLISION_FOR_EVERY_RECTANGULAR_SHAPE)
-					return true;
-				
-				RectangularPixelPerfectMaskPool rectangularPixelPerfectMaskPool = RectangularPixelPerfectMaskPool.getInstance();
-				
-				RectangularPixelPerfectMask reusableRectangularPixelPerfectMask = rectangularPixelPerfectMaskPool.obtainPoolItem();
-				reusableRectangularPixelPerfectMask.setTo((int) pOtherShape.getWidth(), (int) pOtherShape.getHeight());
-				
-				boolean result = PixelPerfectCollisionChecker.checkCollision(this, this.getPixelPerfectMask(), pOtherShape, reusableRectangularPixelPerfectMask);
-				
-				rectangularPixelPerfectMaskPool.recyclePoolItem(reusableRectangularPixelPerfectMask);
-				
-				return result;
-			}
-		}
-		else
-			return false;
-	}
+  public PixelPerfectAnimatedSprite(float pX, float pY, float pWidth, float pHeight,
+      PixelPerfectTiledTextureRegion pTiledTextureRegion, VertexBufferObjectManager pVertexBufferObjectManager,
+      DrawType pDrawType, ShaderProgram pShaderProgram) {
+    super(pX, pY, pWidth, pHeight, pTiledTextureRegion, pVertexBufferObjectManager, pDrawType, pShaderProgram);
+  }
 
-	public static void setUsePixelPerfectCollisionForEveryRectangularShape(final boolean pUsePixelPerfectCollisionForEveryRectangularShape) {
-		USE_PIXELPERFECT_COLLISION_FOR_EVERY_RECTANGULAR_SHAPE = pUsePixelPerfectCollisionForEveryRectangularShape;
-	}
+  @Override
+  public IPixelPerfectMask getPixelPerfectMask() {
+    return ((PixelPerfectTiledTextureRegion) mTextureRegion).getPixelMask(getCurrentTileIndex());
+  }
+
+  public IPixelPerfectMask getPixelMask(final int pTileIndex) {
+    return ((PixelPerfectTiledTextureRegion) mTextureRegion).getPixelMask(pTileIndex);
+  }
+
+  public boolean collidesWith(final RectangularShape pOtherShape) {
+    if (super.collidesWith(pOtherShape)) {
+      if (pOtherShape instanceof IPixelPerfectShape)
+        return PixelPerfectCollisionChecker.checkCollision(this, this.getPixelPerfectMask(), pOtherShape,
+            ((IPixelPerfectShape) pOtherShape).getPixelPerfectMask());
+      else {
+        if (!USE_PIXELPERFECT_COLLISION_FOR_EVERY_RECTANGULAR_SHAPE)
+          return true;
+
+        RectangularPixelPerfectMaskPool rectangularPixelPerfectMaskPool = RectangularPixelPerfectMaskPool.getInstance();
+
+        RectangularPixelPerfectMask reusableRectangularPixelPerfectMask =
+            rectangularPixelPerfectMaskPool.obtainPoolItem();
+        reusableRectangularPixelPerfectMask.setTo((int) pOtherShape.getWidth(), (int) pOtherShape.getHeight());
+
+        boolean result =
+            PixelPerfectCollisionChecker.checkCollision(this, this.getPixelPerfectMask(), pOtherShape,
+                reusableRectangularPixelPerfectMask);
+
+        rectangularPixelPerfectMaskPool.recyclePoolItem(reusableRectangularPixelPerfectMask);
+
+        return result;
+      }
+    } else
+      return false;
+  }
+
+  public static void setUsePixelPerfectCollisionForEveryRectangularShape(
+      final boolean pUsePixelPerfectCollisionForEveryRectangularShape) {
+    USE_PIXELPERFECT_COLLISION_FOR_EVERY_RECTANGULAR_SHAPE = pUsePixelPerfectCollisionForEveryRectangularShape;
+  }
 
 }
