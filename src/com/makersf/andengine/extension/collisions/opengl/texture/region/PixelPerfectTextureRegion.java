@@ -13,57 +13,69 @@ import com.makersf.andengine.extension.collisions.pixelperfect.masks.BitmapPixel
  * 
  * @author Francesco Zoffoli
  * @since 01.08.2012
- *
+ * 
  */
 public class PixelPerfectTextureRegion extends TextureRegion {
 
-	// ===========================================================
-	// Constants
-	// ===========================================================
+  // ===========================================================
+  // Constants
+  // ===========================================================
 
-	private static final float SCALE_DEFAULT = 1;
-	
-	// ===========================================================
-	// Fields
-	// ===========================================================
-	
-	private BitmapPixelPerfectMask mMask;
-	// ===========================================================
-	// Constructors
-	// ===========================================================
-	
-	public PixelPerfectTextureRegion(final ITexture pTexture, final float pTextureX, final float pTextureY, final float pTextureWidth, final float pTextureHeight, final boolean pRotated) {
-		super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight, SCALE_DEFAULT, pRotated);
-	}
-	
-	public PixelPerfectTextureRegion(ITexture pTexture, float pTextureX,
-			float pTextureY, float pTextureWidth, float pTextureHeight, boolean pRotated, BitmapPixelPerfectMask pMask) {
-		super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight, SCALE_DEFAULT,
-				pRotated);
-		this.mMask = pMask;//no need to make a copy of it since it is never changed
-	}
+  private static final float SCALE_DEFAULT = 1;
 
-	public void buildMask(IBitmapTextureAtlasSource pTextureSource, final int pAlphaThreshold, final Config pBitmapConfig) {
-		Bitmap bitmap = pTextureSource.onLoadBitmap(pBitmapConfig);
-		if(mRotated)
-			mMask = new BitmapPixelPerfectMask(bitmap, 0, 0, mTextureWidth, mTextureHeight, pAlphaThreshold);
-		else
-			mMask = new BitmapPixelPerfectMask(bitmap, 0, 0, mTextureHeight, mTextureWidth, pAlphaThreshold);
-	}
-	
-	public BitmapPixelPerfectMask getPixelMask() {
-		if(mMask != null)
-			return mMask;
-		else
-			throw new IllegalAccessError("The mask has not build yet");
-	}
-	
-	@Override
-	public PixelPerfectTextureRegion deepCopy() {
-		if(this.mRotated) {
-			return new PixelPerfectTextureRegion(this.mTexture, this.mTextureX, this.mTextureY, this.mTextureHeight, this.mTextureWidth, this.mRotated, this.mMask);
-		} else {
-			return new PixelPerfectTextureRegion(this.mTexture, this.mTextureY, this.mTextureX, this.mTextureWidth, this.mTextureHeight, this.mRotated, this.mMask);
-		}
-	}
+  // ===========================================================
+  // Fields
+  // ===========================================================
+
+  private BitmapPixelPerfectMask mMask;
+
+  // ===========================================================
+  // Constructors
+  // ===========================================================
+
+  public PixelPerfectTextureRegion(final ITexture pTexture, final float pTextureX, final float pTextureY,
+      final float pTextureWidth, final float pTextureHeight, final boolean pRotated) {
+    super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight, SCALE_DEFAULT, pRotated);
+  }
+
+  public PixelPerfectTextureRegion(ITexture pTexture, float pTextureX, float pTextureY, float pTextureWidth,
+      float pTextureHeight, boolean pRotated, BitmapPixelPerfectMask pMask) {
+    super(pTexture, pTextureX, pTextureY, pTextureWidth, pTextureHeight, SCALE_DEFAULT, pRotated);
+    this.mMask = pMask;// no need to make a copy of it since it is never changed
+  }
+
+  public void buildMask(IBitmapTextureAtlasSource pTextureSource, final int pAlphaThreshold, final Config pBitmapConfig) {
+    Bitmap bitmap = pTextureSource.onLoadBitmap(pBitmapConfig);
+    if (mRotated)
+      mMask = new BitmapPixelPerfectMask(bitmap, 0, 0, mTextureWidth, mTextureHeight, pAlphaThreshold);
+    else
+      mMask = new BitmapPixelPerfectMask(bitmap, 0, 0, mTextureHeight, mTextureWidth, pAlphaThreshold);
+  }
+
+  public BitmapPixelPerfectMask getPixelMask() {
+    if (mMask != null)
+      return mMask;
+    else
+      throw new IllegalAccessError("The mask has not build yet");
+  }
+
+  @Override
+  public PixelPerfectTextureRegion deepCopy() {
+    if (this.mRotated) {
+      return new PixelPerfectTextureRegion(this.mTexture, this.mTextureX, this.mTextureY, this.mTextureHeight,
+          this.mTextureWidth, this.mRotated, this.mMask);
+    } else {
+      return new PixelPerfectTextureRegion(this.mTexture, this.mTextureY, this.mTextureX, this.mTextureWidth,
+          this.mTextureHeight, this.mRotated, this.mMask);
+    }
+  }
+
+  /**
+   * Called to release the BitmapPixelPerfectMask created for this texture
+   * region. This should only be called when the texture region is no longer
+   * needed
+   */
+  public void clearMask() {
+    mMask = null;
+  }
 }
