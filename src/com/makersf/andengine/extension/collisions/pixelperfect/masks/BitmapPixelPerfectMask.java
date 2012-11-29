@@ -1,7 +1,5 @@
 package com.makersf.andengine.extension.collisions.pixelperfect.masks;
 
-import org.andengine.util.debug.Debug;
-
 import android.graphics.Bitmap;
 
 /**
@@ -28,7 +26,6 @@ public class BitmapPixelPerfectMask implements IPixelPerfectMask {
 
     mBitsBlock = new boolean[bitmaskWidth][bitmaskHeight];
 
-    Debug.d("CHECKING BIT : "+ pTextureX +" "+ pTextureY+" " + bitmaskWidth + " " + bitmaskHeight + " " + bitmap.getWidth() + " " + bitmap.getHeight());
     for (int x = 0; x < bitmaskWidth; x++) {
       for (int y = 0; y < bitmaskHeight; y++) {
         mBitsBlock[x][y] = ((bitmap.getPixel(X + x, Y + y) >> 24) & 0x000000FF) > pAlphaThreshold;
